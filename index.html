@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>⚽ 2026美加墨世界杯 - 知识挑战</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Comic+Neue:wght@400;700&family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+/* ===== CSS Reset & Variables ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --font-hand: 'Patrick Hand', 'Comic Neue', 'Noto Sans SC', cursive, sans-serif;
+  --font-body: 'Comic Neue', 'Noto Sans SC', sans-serif;
+  --color-bg: #FFF8F0;
+  --color-primary: #FF6B35;
+  --color-secondary: #FFB347;
+  --color-accent: #4ECDC4;
+  --color-dark: #2D3436;
+  --color-warm: #FFEAA7;
+  --color-correct: #00B894;
+  --color-wrong: #E17055;
+  --color-card: #FFFFFF;
+  --shadow-warm: 8px 8px 0 rgba(45,52,54,0.15);
+  --shadow-soft: 4px 4px 0 rgba(255,107,53,0.2);
+  --border-wobbly: 3px solid var(--color-dark);
+  --radius-wobbly: 16px;
+  --max-width: 800px;
+  --transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+/* ===== Wobbly Border Utility ===== */
+.wobbly {
+  border: var(--border-wobbly);
+  border-radius: var(--radius-wobbly);
+  box-shadow: var(--shadow-warm);
+  position: relative;
+}
+.wobbly::before {
+  content: '';
+  position: absolute;
+  top: -4px; left: -4px; right: -4px; bottom: -4px;
+  border: 2px dashed var(--color-secondary);
+  border-radius: calc(var(--radius-wobbly) + 4px);
+  pointer-events: none;
+  opacity: 0.4;
+}
+.wobbly-sm {
+  border: 2.5px solid var(--color-dark);
+  border-radius: 12px;
+}
+/* ===== Hand-drawn Decorations ===== */
+.doodle-star {
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0.3;
+  animation: wobble 3s ease-in-out infinite;
+}
+.doodle-dot {
+  position: absolute;
+  width: 12px; height: 12px;
+  background: var(--color-secondary);
+  border-radius: 50%;
+  opacity: 0.3;
+}
+@keyframes wobble {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(10deg) scale(1.1); }
+  75% { transform: rotate(-10deg) scale(0.9); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-15px) scale(1.05); }
+  50% { transform: translateY(-5px) scale(0.98); }
+  70% { transform: translateY(-8px) scale(1.02); }
+}
+@keyframes flyIn {
+  0% { opacity: 0; transform: translateY(40px) scale(0.5) rotate(-10deg); }
+  60% { transform: translateY(-10px) scale(1.05) rotate(3deg); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+}
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes confettiFall {
+  0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+/* ===== Page Container ===== */
+.page { display: none; width: 100%; min-height: 100vh; position: relative; }
+.page.active { display: flex; flex-direction: column; align-items: center; }
+/* ===== COVER PAGE ===== */
+#cover-page {
+  background: linear-gradient(180deg, #FFF8F0 0%, #FFEAA7 50%, #FFD6A5 100%);
+  justify-content: center;
+  padding: 20px;
+  overflow: hidden;
+}
+.cover-content {
+  position: relative;
+  max-width: var(--max-width);
+  width: 100%;
+  text-align: center;
+  padding: 30px 20px;
+}
+.cover-hero-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto 24px;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  border-radius: var(--radius-wobbly);
+  box-shadow: var(--shadow-warm);
+  border: var(--border-wobbly);
+}
+.cover-hero-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.cover-badge {
+  position: absolute;
+  top: -10px; right: -10px;
+  background: var(--color-primary);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-family: var(--font-hand);
+  font-size: 0.85rem;
+  transform: rotate(8deg);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+  z-index: 2;
+}
+.cover-title {
+  font-family: var(--font-hand);
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  color: var(--color-dark);
+  line-height: 1.2;
+  margin-bottom: 8px;
+  animation: float 4s ease-in-out infinite;
+  position: relative;
+  display: inline-block;
+}
+.cover-title .emoji { display: inline-block; animation: wobble 2s ease-in-out infinite; }
+.cover-subtitle {
+  font-family: var(--font-hand);
+  font-size: clamp(1rem, 3vw, 1.4rem);
+  color: #666;
+  margin-bottom: 12px;
+}
+.cover-tagline {
+  font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+  color: #888;
+  margin-bottom: 28px;
+  font-style: italic;
+}
+.cover-decoration {
+  position: absolute;
+  pointer-events: none;
+}
+.cover-decoration.d1 { top: 5%; left: 5%; font-size: 2rem; animation: wobble 3s ease-in-out infinite; }
+.cover-decoration.d2 { top: 15%; right: 8%; font-size: 1.8rem; animation: wobble 2.5s ease-in-out infinite 0.5s; }
+.cover-decoration.d3 { bottom: 20%; left: 3%; font-size: 1.5rem; animation: float 3.5s ease-in-out infinite; }
+.cover-decoration.d4 { bottom: 25%; right: 5%; font-size: 2.2rem; animation: wobble 4s ease-in-out infinite 1s; }
+/* ===== Start Button ===== */
+.btn-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 48px;
+  font-family: var(--font-hand);
+  font-size: clamp(1.3rem, 4vw, 1.8rem);
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--color-primary), #FF8C42);
+  border: 3px solid var(--color-dark);
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: var(--shadow-warm);
+  transition: var(--transition);
+  animation: bounce 2s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+.btn-start:hover { transform: translateY(-3px) scale(1.05); box-shadow: 10px 12px 0 rgba(45,52,54,0.2); }
+.btn-start:active { transform: translateY(2px) scale(0.98); }
+.btn-start::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.btn-start:hover::after { opacity: 1; }
+/* ===== Intro Animation Overlay ===== */
+#intro-overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #2D3436, #1a1a2e);
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+#intro-overlay.active { display: flex; }
+.intro-elem {
+  position: absolute;
+  font-size: 3rem;
+  opacity: 0;
+}
+.intro-elem.animate {
+  animation: flyIn 0.8s ease-out forwards;
+}
+.intro-ball {
+  width: 80px; height: 80px;
+  background: radial-gradient(circle at 35% 35%, #fff, #ccc, #555);
+  border-radius: 50%;
+  border: 3px solid #333;
+  position: relative;
+}
+.intro-ball::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 2px solid rgba(0,0,0,0.15);
+  border-radius: 50%;
+}
+.intro-ball::after {
+  content: '⚽';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.5rem;
+}
+.intro-text {
+  font-family: var(--font-hand);
+  color: #fff;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  text-align: center;
+  opacity: 0;
+  margin-top: 20px;
+}
+.intro-text.animate { animation: fadeInUp 0.6s ease-out 1s forwards; }
+.intro-flag {
+  width: 60px; height: auto;
+  position: absolute;
+  opacity: 0;
+}
+/* ===== QUIZ PAGE ===== */
+#quiz-page {
+  padding: 16px;
+  background: var(--color-bg);
+  justify-content: flex-start;
+  padding-top: 20px;
+}
+.quiz-container {
+  max-width: var(--max-width);
+  width: 100%;
+  position: relative;
+}
+/* Progress Bar */
+.quiz-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+.quiz-progress-text {
+  font-family: var(--font-hand);
+  font-size: 1rem;
+  color: #666;
+  white-space: nowrap;
+}
+.progress-track {
+  flex: 1;
+  height: 14px;
+  background: #eee;
+  border-radius: 10px;
+  border: 2px solid var(--color-dark);
+  overflow: hidden;
+  position: relative;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-secondary), var(--color-primary));
+  border-radius: 8px;
+  transition: width 0.5s ease;
+  position: relative;
+}
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 4px;
+  right: 4px; height: 4px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 4px;
+}
+/* Score display */
+.quiz-score-display {
+  font-family: var(--font-hand);
+  font-size: 1rem;
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+/* ===== Timer ===== */
+.timer-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  position: relative;
+}
+.timer-svg {
+  width: 70px;
+  height: 70px;
+  transform: rotate(-90deg);
+}
+.timer-bg { fill: none; stroke: #eee; stroke-width: 6; }
+.timer-progress {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.3s linear, stroke 0.3s;
+}
+.timer-progress.warning { stroke: var(--color-wrong); }
+.timer-text {
+  position: absolute;
+  font-family: var(--font-hand);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-dark);
+}
+.timer-text.warning { color: var(--color-wrong); animation: pulse 0.5s ease-in-out infinite; }
+/* ===== Question Card ===== */
+.question-card {
+  background: var(--color-card);
+  padding: 24px 20px;
+  margin-bottom: 16px;
+  animation: fadeInUp 0.4s ease-out;
+}
+.question-tag {
+  display: inline-block;
+  background: var(--color-warm);
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-family: var(--font-hand);
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 10px;
+  border: 2px solid var(--color-dark);
+}
+.question-number {
+  font-family: var(--font-hand);
+  font-size: 0.9rem;
+  color: #999;
+  margin-bottom: 8px;
+}
+.question-text {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 3.5vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  color: var(--color-dark);
+}
+/* ===== Answers ===== */
+.answers-grid {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.answer-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--color-card);
+  border: 3px solid var(--color-dark);
+  border-radius: 14px;
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 2.8vw, 1.05rem);
+  color: var(--color-dark);
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: left;
+  position: relative;
+}
+.answer-btn:hover:not(.disabled) {
+  transform: translateX(6px);
+  background: #FFFBEA;
+  box-shadow: 4px 4px 0 rgba(45,52,54,0.1);
+}
+.answer-btn:active:not(.disabled) { transform: translateX(2px); }
+.answer-btn .answer-letter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--color-warm);
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  border: 2px solid var(--color-dark);
+}
+.answer-btn .answer-text { flex: 1; }
+.answer-btn.correct {
+  background: #E6FFF3;
+  border-color: var(--color-correct);
+  animation: pulse 0.3s ease;
+}
+.answer-btn.correct .answer-letter { background: var(--color-correct); color: #fff; }
+.answer-btn.wrong {
+  background: #FFE8E0;
+  border-color: var(--color-wrong);
+  animation: shake 0.3s ease;
+}
+.answer-btn.wrong .answer-letter { background: var(--color-wrong); color: #fff; }
+.answer-btn.disabled { cursor: default; opacity: 0.85; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+/* ===== Explanation ===== */
+.explanation-box {
+  padding: 16px 20px;
+  background: #FFFBEA;
+  border: 3px dashed var(--color-secondary);
+  border-radius: 14px;
+  margin-bottom: 16px;
+  animation: fadeInUp 0.3s ease-out;
+}
+.explanation-box .exp-label {
+  font-family: var(--font-hand);
+  font-size: 0.85rem;
+  color: var(--color-primary);
+  margin-bottom: 4px;
+}
+.explanation-box .exp-text {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.5;
+}
+/* ===== RESULT PAGE ===== */
+#result-page {
+  padding: 20px;
+  background: linear-gradient(180deg, #FFF8F0 0%, #FFEAA7 100%);
+  justify-content: center;
+  min-height: 100vh;
+}
+.result-container {
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+.result-title {
+  font-family: var(--font-hand);
+  font-size: clamp(1.8rem, 6vw, 2.5rem);
+  margin-bottom: 20px;
+  color: var(--color-dark);
+}
+/* ===== Rank Card (Canvas container) ===== */
+.rank-card-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto 20px;
+  border-radius: var(--radius-wobbly);
+  overflow: hidden;
+  box-shadow: var(--shadow-warm);
+  border: var(--border-wobbly);
+}
+.rank-card-wrap canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+/* ===== Result Actions ===== */
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 16px;
+}
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  font-family: var(--font-hand);
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: 3px solid var(--color-dark);
+  border-radius: 30px;
+  cursor: pointer;
+  transition: var(--transition);
+  background: #fff;
+  color: var(--color-dark);
+  box-shadow: var(--shadow-soft);
+}
+.btn-action:hover { transform: translateY(-2px); box-shadow: var(--shadow-warm); }
+.btn-action.primary { background: var(--color-primary); color: #fff; }
+.btn-action.save { background: var(--color-accent); color: #fff; }
+/* ===== Leaderboard ===== */
+.leaderboard-section {
+  max-width: 600px;
+  width: 100%;
+  margin-top: 30px;
+  padding: 20px;
+  text-align: center;
+}
+.leaderboard-title {
+  font-family: var(--font-hand);
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+  color: var(--color-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.leaderboard-list {
+  text-align: left;
+}
+.lb-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: var(--color-card);
+  border: 2px solid var(--color-dark);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  animation: fadeInUp 0.3s ease-out;
+  transition: var(--transition);
+}
+.lb-item:hover { transform: translateX(4px); }
+.lb-rank {
+  font-family: var(--font-hand);
+  font-size: 1.1rem;
+  font-weight: 700;
+  width: 30px;
+  text-align: center;
+  color: var(--color-primary);
+}
+.lb-rank.gold { color: #FFD700; }
+.lb-rank.silver { color: #C0C0C0; }
+.lb-rank.bronze { color: #CD7F32; }
+.lb-score {
+  font-family: var(--font-hand);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-left: auto;
+}
+.lb-date {
+  font-size: 0.75rem;
+  color: #aaa;
+  white-space: nowrap;
+}
+.lb-empty {
+  font-size: 0.95rem;
+  color: #aaa;
+  padding: 20px;
+  font-style: italic;
+}
+.btn-clear-lb {
+  margin-top: 12px;
+  padding: 6px 18px;
+  font-family: var(--font-hand);
+  font-size: 0.85rem;
+  border: 2px solid #ddd;
+  border-radius: 20px;
+  background: transparent;
+  color: #aaa;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-clear-lb:hover { border-color: var(--color-wrong); color: var(--color-wrong); }
+/* ===== Responsive ===== */
+/* Mobile S (320px+) */
+@media (min-width: 320px) {
+  .question-card { padding: 18px 14px; }
+  .answer-btn { padding: 12px 14px; }
+}
+/* Tablet (600px+) */
+@media (min-width: 600px) {
+  .answers-grid { grid-template-columns: 1fr 1fr; }
+  .cover-hero-wrap { max-width: 520px; }
+  .result-actions { flex-direction: row; }
+}
+/* PC (1024px+) */
+@media (min-width: 1024px) {
+  #quiz-page { padding: 30px 40px; }
+  .quiz-container { max-width: 720px; }
+  .question-card { padding: 30px 28px; }
+  .answer-btn { padding: 16px 20px; font-size: 1.05rem; }
+}
+/* Large Screen (1440px+) */
+@media (min-width: 1440px) {
+  #quiz-page { padding: 40px 60px; }
+  .quiz-container { max-width: 800px; }
+  .timer-svg { width: 80px; height: 80px; }
+}
+/* ===== Misc ===== */
+.hidden { display: none !important; }
+.text-center { text-align: center; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.score-highlight {
+  font-family: var(--font-hand);
+  color: var(--color-primary);
+  font-size: 1.2em;
+}
+/* ===== Loading Spinner ===== */
+.spinner {
+  display: inline-block;
+  width: 24px; height: 24px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: var(--color-secondary); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ==================== COVER PAGE ==================== -->
+<div id="cover-page" class="page active">
+  <div class="cover-content">
+    <!-- Decorative elements -->
+    <span class="cover-decoration d1">⚽</span>
+    <span class="cover-decoration d2">🏆</span>
+    <span class="cover-decoration d3">⭐</span>
+    <span class="cover-decoration d4">🎉</span>
+
+    <div class="cover-hero-wrap">
+      <img src="assets/hero_comic.jpg" alt="2026世界杯" loading="lazy" onerror="this.style.display='none'">
+      <div class="cover-badge">AI创意大赛</div>
+    </div>
+
+    <h1 class="cover-title">
+      <span class="emoji">⚽</span> 2026美加墨世界杯 <span class="emoji">🌍</span>
+    </h1>
+    <p class="cover-subtitle">🏟️ 知识挑战赛</p>
+    <p class="cover-tagline">📝 每局20题 · 测测你有多了解2026世界杯！</p>
+
+    <button class="btn-start" onclick="startGame()">
+      开始挑战 <span style="font-size:1.2em;">⚡</span>
+    </button>
+  </div>
+</div>
+
+<!-- ==================== INTRO OVERLAY ==================== -->
+<div id="intro-overlay">
+  <div class="intro-elem" id="intro-ball" style="top:35%;left:50%;transform:translate(-50%,-50%)">
+    <div class="intro-ball"></div>
+  </div>
+  <div class="intro-elem intro-flag" id="intro-flag1" style="top:25%;left:20%;font-size:3rem;">🇺🇸</div>
+  <div class="intro-elem intro-flag" id="intro-flag2" style="top:40%;right:15%;font-size:3rem;">🇲🇽</div>
+  <div class="intro-elem intro-flag" id="intro-flag3" style="top:55%;left:25%;font-size:3rem;">🇨🇦</div>
+  <div class="intro-elem" id="intro-star1" style="top:30%;left:12%;font-size:2rem;">⭐</div>
+  <div class="intro-elem" id="intro-star2" style="top:45%;right:10%;font-size:2rem;">🏆</div>
+  <div class="intro-text" id="intro-text">⚽ 2026美加墨世界杯知识挑战 ⚽</div>
+</div>
+
+<!-- ==================== QUIZ PAGE ==================== -->
+<div id="quiz-page" class="page">
+  <div class="quiz-container">
+    <!-- Progress -->
+    <div class="quiz-progress">
+      <span class="quiz-progress-text" id="qProgressText">1/20</span>
+      <div class="progress-track">
+        <div class="progress-fill" id="qProgressFill" style="width:5%"></div>
+      </div>
+      <span class="quiz-score-display" id="qScoreDisplay">0分</span>
+    </div>
+
+    <!-- Timer -->
+    <div class="timer-wrap">
+      <svg class="timer-svg" viewBox="0 0 70 70">
+        <circle class="timer-bg" cx="35" cy="35" r="28"/>
+        <circle class="timer-progress" id="timerCircle" cx="35" cy="35" r="28"
+          stroke-dasharray="176" stroke-dashoffset="0"/>
+      </svg>
+      <span class="timer-text" id="timerText">20</span>
+    </div>
+
+    <!-- Question -->
+    <div class="question-card wobbly" id="questionCard">
+      <div class="question-number" id="qNumber">第 1 题</div>
+      <div class="question-tag" id="qTag">基础知识</div>
+      <div class="question-text" id="qText">题目加载中...</div>
+      <div class="answers-grid" id="answersContainer"></div>
+      <div class="explanation-box hidden" id="explanationBox">
+        <div class="exp-label">💡 解析</div>
+        <div class="exp-text" id="explanationText"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== RESULT PAGE ==================== -->
+<div id="result-page" class="page">
+  <div class="result-container">
+    <h2 class="result-title">🎉 挑战完成！</h2>
+
+    <div class="rank-card-wrap wobbly" id="rankCardWrap">
+      <canvas id="rankCanvas" width="440" height="620"></canvas>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn-action primary" onclick="startGame()">🔄 再来一局</button>
+      <button class="btn-action save" onclick="saveRankCard()">💾 保存图片</button>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="leaderboard-section wobbly-sm" style="border-style:solid;border-color:var(--color-dark);padding:20px 16px;border-radius:16px;background:var(--color-card);margin-top:24px;">
+      <h3 class="leaderboard-title">🏆 排行榜 TOP 10</h3>
+      <div class="leaderboard-list" id="lbList">
+        <div class="lb-empty">还没有记录，快来挑战吧！</div>
+      </div>
+      <button class="btn-clear-lb" onclick="clearLeaderboard()">🗑️ 清除记录</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// 52 Questions (All Chinese, about 2026 FIFA World Cup)
+// ============================================================
+const ALL_QUESTIONS = [
+  // ---- Host Cities & Venues ----
+  {
+    id: 1, tag: '主办城市',
+    q: '2026年世界杯由哪三个国家联合主办？',
+    options: ['美国、墨西哥、加拿大', '美国、英国、加拿大', '墨西哥、巴西、阿根廷', '美国、日本、韩国'],
+    answer: 0,
+    explanation: '2026年世界杯由美国、墨西哥和加拿大联合主办，这是历史上首次由三个国家共同举办的世界杯赛事。'
+  },
+  {
+    id: 2, tag: '主办城市',
+    q: '2026世界杯共有多少个主办城市？',
+    options: ['12个', '16个', '20个', '24个'],
+    answer: 1,
+    explanation: '2026年世界杯共有16个主办城市，其中美国11个、墨西哥3个、加拿大2个。'
+  },
+  {
+    id: 3, tag: '主办城市',
+    q: '以下哪个城市不是2026世界杯主办城市？',
+    options: ['洛杉矶', '纽约/新泽西', '芝加哥', '波士顿'],
+    answer: 3,
+    explanation: '波士顿不是主办城市。美国的主办城市包括洛杉矶、纽约/新泽西、达拉斯、堪萨斯城、休斯顿、亚特兰大等。'
+  },
+  {
+    id: 4, tag: '主办城市',
+    q: '2026世界杯的决赛将在哪个体育场举行？',
+    options: ['洛杉矶·SoFi体育场', '纽约·大都会体育场', '达拉斯·AT&T体育场', '休斯顿·NRG体育场'],
+    answer: 0,
+    explanation: '决赛将在洛杉矶的SoFi体育场（SoFi Stadium）举行，该体育场可容纳超过7万名观众。'
+  },
+  {
+    id: 5, tag: '主办城市',
+    q: '墨西哥在2026世界杯中将有几个主办城市？',
+    options: ['2个', '3个', '4个', '5个'],
+    answer: 1,
+    explanation: '墨西哥有3个主办城市：墨西哥城、瓜达拉哈拉和蒙特雷。'
+  },
+  {
+    id: 6, tag: '主办城市',
+    q: '加拿大的两个主办城市是？',
+    options: ['温哥华和多伦多', '温哥华和蒙特利尔', '多伦多和卡尔加里', '蒙特利尔和渥太华'],
+    answer: 0,
+    explanation: '加拿大的两个主办城市是温哥华（BC Place）和多伦多（BMO Field）。'
+  },
+  {
+    id: 7, tag: '主办城市',
+    q: '标志性的阿兹台克体育场（Estadio Azteca）位于哪个主办城市？',
+    options: ['墨西哥城', '瓜达拉哈拉', '蒙特雷', '洛杉矶'],
+    answer: 0,
+    explanation: '阿兹台克体育场位于墨西哥城，是历史上唯一举办过两届世界杯决赛（1970和1986）的体育场。'
+  },
+  // ---- Format Changes ----
+  {
+    id: 8, tag: '赛制改革',
+    q: '2026世界杯将扩军至多少支球队？',
+    options: ['32支', '40支', '48支', '64支'],
+    answer: 2,
+    explanation: '2026年世界杯将首次扩军至48支球队，比之前的32支增加了16支。'
+  },
+  {
+    id: 9, tag: '赛制改革',
+    q: '2026世界杯的小组赛阶段将如何分组？',
+    options: ['12个小组每组4队', '16个小组每组3队', '8个小组每组6队', '10个小组每组4-5队'],
+    answer: 0,
+    explanation: '2026世界杯采用12个小组、每组4支球队的赛制，小组前两名和8个成绩最好的第三名晋级32强淘汰赛。'
+  },
+  {
+    id: 10, tag: '赛制改革',
+    q: '2026世界杯总比赛场次将增加到多少场？',
+    options: ['64场', '80场', '104场', '120场'],
+    answer: 2,
+    explanation: '扩军后，2026世界杯将进行104场比赛，远超之前64场的规模。'
+  },
+  {
+    id: 11, tag: '赛制改革',
+    q: '2026世界杯的淘汰赛阶段将有多少支球队参加？',
+    options: ['16支', '24支', '32支', '48支'],
+    answer: 2,
+    explanation: '12个小组的前两名（24支）加上8个成绩最好的小组第三名，共32支球队进入淘汰赛阶段。'
+  },
+  // ---- Teams & Qualifiers ----
+  {
+    id: 12, tag: '参赛球队',
+    q: '2026世界杯亚洲区将获得几个参赛名额？',
+    options: ['4.5个', '6个', '8.5个', '10个'],
+    answer: 2,
+    explanation: '随着扩军至48队，亚洲区的名额从4.5个增加到8.5个，大大增加了亚洲球队的参赛机会。'
+  },
+  {
+    id: 13, tag: '参赛球队',
+    q: '非洲区在2026世界杯中获得几个名额？',
+    options: ['5个', '7个', '9.5个', '12个'],
+    answer: 2,
+    explanation: '非洲区的名额从5个增加到9.5个，是扩军中获益最大的大洲之一。'
+  },
+  {
+    id: 14, tag: '参赛球队',
+    q: '哪支球队是2022年卡塔尔世界杯的冠军？',
+    options: ['法国', '阿根廷', '巴西', '克罗地亚'],
+    answer: 1,
+    explanation: '阿根廷在2022年卡塔尔世界杯决赛中通过点球大战击败法国，队史第三次夺得世界杯冠军。'
+  },
+  {
+    id: 15, tag: '参赛球队',
+    q: '以下哪支球队从未赢得过世界杯冠军？',
+    options: ['英格兰', '荷兰', '法国', '西班牙'],
+    answer: 1,
+    explanation: '荷兰队三次闯入世界杯决赛（1974、1978、2010）但均屈居亚军，被称为"无冕之王"。'
+  },
+  {
+    id: 16, tag: '参赛球队',
+    q: '中国男足上一次参加世界杯是哪一年？',
+    options: ['1998年', '2002年', '2006年', '从未晋级'],
+    answer: 1,
+    explanation: '中国男足唯一一次参加世界杯是在2002年韩日世界杯，小组赛三战皆负未进球。'
+  },
+  {
+    id: 17, tag: '参赛球队',
+    q: '2026世界杯中，东道主美国队自动获得参赛资格，这是美国第几次主办世界杯？',
+    options: ['第一次', '第二次', '第三次', '第四次'],
+    answer: 1,
+    explanation: '美国在1994年首次主办世界杯，2026年是第二次。美国队自1990年以来从未缺席过世界杯。'
+  },
+  {
+    id: 18, tag: '参赛球队',
+    q: '以下哪支南美球队是世界杯夺冠次数最多的？',
+    options: ['阿根廷', '乌拉圭', '巴西', '哥伦比亚'],
+    answer: 2,
+    explanation: '巴西队共5次夺得世界杯冠军（1958、1962、1970、1994、2002），是夺冠次数最多的球队。'
+  },
+  // ---- Famous Players ----
+  {
+    id: 19, tag: '球星',
+    q: '阿根廷球星梅西在2022年世界杯决赛中打入了几球？',
+    options: ['1球', '2球', '3球', '4球'],
+    answer: 1,
+    explanation: '梅西在2022世界杯决赛中打入2球（点球+加时赛进球），最终阿根廷点球战胜法国夺冠。'
+  },
+  {
+    id: 20, tag: '球星',
+    q: '哪位球员是世界杯历史最佳射手？',
+    options: ['罗纳尔多', '克洛泽', '梅西', '方丹'],
+    answer: 1,
+    explanation: '德国球员米洛斯拉夫·克洛泽以16粒进球保持着世界杯历史最佳射手纪录。'
+  },
+  {
+    id: 21, tag: '球星',
+    q: '2022年世界杯金靴奖得主是谁？',
+    options: ['梅西', '姆巴佩', '吉鲁', '阿尔瓦雷斯'],
+    answer: 1,
+    explanation: '法国球星基利安·姆巴佩以8粒进球获得2022年世界杯金靴奖，并在决赛中上演帽子戏法。'
+  },
+  {
+    id: 22, tag: '球星',
+    q: '以下哪位球员被称为"球王"并带领阿根廷在1986年夺冠？',
+    options: ['马拉多纳', '梅西', '巴蒂斯图塔', '肯佩斯'],
+    answer: 0,
+    explanation: '迭戈·马拉多纳在1986年墨西哥世界杯上以队长身份带领阿根廷夺冠，上演了"上帝之手"等经典时刻。'
+  },
+  {
+    id: 23, tag: '球星',
+    q: 'C罗（克里斯蒂亚诺·罗纳尔多）代表葡萄牙参加过几届世界杯？',
+    options: ['3届', '4届', '5届', '6届'],
+    answer: 2,
+    explanation: 'C罗从2006年开始至2022年，连续参加了5届世界杯（2006、2010、2014、2018、2022）。'
+  },
+  {
+    id: 24, tag: '球星',
+    q: '巴西球星内马尔在世界杯历史射手榜上排名第几？',
+    options: ['第2位', '第3位', '并列第5位', '第10位'],
+    answer: 2,
+    explanation: '内马尔以8球追平了贝利保持的巴西队世界杯总进球纪录，并列历史射手榜第五位左右。'
+  },
+  // ---- World Cup History ----
+  {
+    id: 25, tag: '世界杯历史',
+    q: '第一届世界杯在哪一年举办？',
+    options: ['1928年', '1930年', '1934年', '1938年'],
+    answer: 1,
+    explanation: '第一届世界杯于1930年在乌拉圭举办，东道主乌拉圭在决赛中击败阿根廷夺冠。'
+  },
+  {
+    id: 26, tag: '世界杯历史',
+    q: '哪个国家赢得世界杯冠军次数最多？',
+    options: ['德国', '巴西', '意大利', '阿根廷'],
+    answer: 1,
+    explanation: '巴西以5次冠军（1958、1962、1970、1994、2002）位居榜首。'
+  },
+  {
+    id: 27, tag: '世界杯历史',
+    q: '世界杯历史上唯一一位以球员和教练身份都赢得过冠军的是谁？',
+    options: ['贝肯鲍尔', '扎加洛', '德尚', '以上都是'],
+    answer: 3,
+    explanation: '贝肯鲍尔（德国）、扎加洛（巴西）和德尚（法国）都曾分别以球员和教练身份赢得世界杯冠军。'
+  },
+  {
+    id: 28, tag: '世界杯历史',
+    q: '哪届世界杯首次引入了小组赛制？',
+    options: ['1930年', '1934年', '1938年', '1950年'],
+    answer: 3,
+    explanation: '1950年巴西世界杯首次引入小组赛制，取代了之前的纯淘汰赛赛制。'
+  },
+  {
+    id: 29, tag: '世界杯历史',
+    q: '世界杯历史上比分最大的比赛是哪一场？',
+    options: ['匈牙利9-0韩国', '匈牙利10-1萨尔瓦多', '匈牙利9-0保加利亚', '南斯拉夫9-0扎伊尔'],
+    answer: 1,
+    explanation: '1982年世界杯匈牙利10-1战胜萨尔瓦多，是世界杯历史上单场进球最多的比赛。'
+  },
+  {
+    id: 30, tag: '世界杯历史',
+    q: '以下哪位门将保持着世界杯最长不失球纪录？',
+    options: ['布冯', '卡西利亚斯', '曾加', '诺伊尔'],
+    answer: 2,
+    explanation: '意大利门将曾加在1990年世界杯上保持了517分钟不失球的纪录。'
+  },
+  {
+    id: 31, tag: '世界杯历史',
+    q: '世界杯决赛在常规时间（不含加时）分差最大的是哪场？',
+    options: ['1958年巴西5-2瑞典', '1970年巴西4-1意大利', '1998年法国3-0巴西', '2002年巴西2-0德国'],
+    answer: 2,
+    explanation: '1998年法国3-0击败巴西，是世界杯决赛中常规时间分差最大的比赛之一。'
+  },
+  {
+    id: 32, tag: '世界杯历史',
+    q: '哪支球队是世界杯历史上夺冠间隔最长的？',
+    options: ['意大利', '德国', '英格兰', '西班牙'],
+    answer: 0,
+    explanation: '意大利在1982年夺冠后，直到2006年才再次夺冠，间隔24年。'
+  },
+  // ---- Stadiums ----
+  {
+    id: 33, tag: '球场',
+    q: '2026世界杯开幕式将在哪个体育场举行？',
+    options: ['墨西哥城·阿兹台克体育场', '洛杉矶·SoFi体育场', '达拉斯·AT&T体育场', '纽约·大都会体育场'],
+    answer: 0,
+    explanation: '2026世界杯开幕式将在墨西哥城的阿兹台克体育场举行，这是世界杯历史上的标志性场地。'
+  },
+  {
+    id: 34, tag: '球场',
+    q: 'SoFi体育场（决赛场地）位于哪个城市？',
+    options: ['旧金山', '洛杉矶', '圣地亚哥', '拉斯维加斯'],
+    answer: 1,
+    explanation: 'SoFi体育场位于洛杉矶地区的英格尔伍德，是2026世界杯决赛的举办地。'
+  },
+  {
+    id: 35, tag: '球场',
+    q: 'AT&T体育场（达拉斯）的特色是什么？',
+    options: ['可开合屋顶', '天然草皮', '全木质结构', '水上球场'],
+    answer: 0,
+    explanation: 'AT&T体育场拥有可开合屋顶和世界上最大的高清屏幕之一，是达拉斯牛仔队的主场。'
+  },
+  {
+    id: 36, tag: '球场',
+    q: '加拿大多伦多的BMO Field球场主要用于什么运动？',
+    options: ['足球', '冰球', '棒球', '篮球'],
+    answer: 0,
+    explanation: 'BMO Field是多伦多FC（MLS）的主场，主要用于足球比赛。'
+  },
+  // ---- Misc Facts ----
+  {
+    id: 37, tag: '趣味知识',
+    q: '世界杯奖杯的名字是什么？',
+    options: ['大力神杯', '金杯', '世界奖杯', '冠军奖杯'],
+    answer: 0,
+    explanation: '世界杯奖杯官方名称为"国际足联世界杯奖杯"，但普遍被称为"大力神杯"。'
+  },
+  {
+    id: 38, tag: '趣味知识',
+    q: '世界杯历史上最年长的进球球员是谁？',
+    options: ['米拉（喀麦隆）', '罗杰·米拉', '贝利', '方丹'],
+    answer: 1,
+    explanation: '喀麦隆的罗杰·米拉在1994年世界杯以42岁高龄进球，是世界杯最年长的进球者。'
+  },
+  {
+    id: 39, tag: '趣味知识',
+    q: '2026世界杯的官方吉祥物是什么？',
+    options: ['一只名为"猎豹"的动物', '有待官方公布', '一只鹰', '一条龙'],
+    answer: 1,
+    explanation: '截至2025年，2026世界杯的官方吉祥物尚未正式公布，通常在赛事临近时发布。'
+  },
+  {
+    id: 40, tag: '趣味知识',
+    q: '世界杯历史上第一个打入进球的球员是谁？',
+    options: ['贝利', '吕西安·洛朗', '马拉多纳', '斯塔比莱'],
+    answer: 1,
+    explanation: '1930年首届世界杯上，法国球员吕西安·洛朗打入了世界杯历史上的第一个进球。'
+  },
+  {
+    id: 41, tag: '趣味知识',
+    q: '世界杯历史上最年轻的进球球员是？',
+    options: ['贝利', '姆巴佩', '欧文', '罗纳尔多'],
+    answer: 0,
+    explanation: '贝利在1958年世界杯决赛中以17岁零249天的年龄进球，保持着最年轻进球者纪录。'
+  },
+  {
+    id: 42, tag: '趣味知识',
+    q: '2026世界杯将首次在哪个大洲举行（从上一届算起的新增）？',
+    options: ['北美洲', '南美洲', '欧洲', '非洲'],
+    answer: 0,
+    explanation: '2022年在亚洲（卡塔尔），2026年在北美洲（美加墨），这是世界杯连续在不同大洲举办。'
+  },
+  {
+    id: 43, tag: '趣味知识',
+    q: '2026世界杯比赛将在几月举行？',
+    options: ['5-6月', '6-7月', '7-8月', '11-12月'],
+    answer: 1,
+    explanation: '2026世界杯将在传统的6-7月期间举行，与以往的夏季世界杯时间一致。'
+  },
+  {
+    id: 44, tag: '趣味知识',
+    q: '世界杯历史上共有几个不同的冠军国家？',
+    options: ['6个', '8个', '10个', '12个'],
+    answer: 1,
+    explanation: '共有8个国家赢得过世界杯冠军：巴西、德国、意大利、阿根廷、法国、乌拉圭、英格兰、西班牙。'
+  },
+  {
+    id: 45, tag: '趣味知识',
+    q: '世界杯历史上出场次数最多的球员是谁？',
+    options: ['梅西', '马特乌斯', '克洛泽', 'C罗'],
+    answer: 1,
+    explanation: '德国球员洛塔尔·马特乌斯在5届世界杯（1982-1998）中出场25次，是世界杯出场次数最多的球员。'
+  },
+  {
+    id: 46, tag: '趣味知识',
+    q: '以下哪个国家在2022年世界杯中获得了第四名？',
+    options: ['摩洛哥', '克罗地亚', '比利时', '葡萄牙'],
+    answer: 0,
+    explanation: '摩洛哥在2022年世界杯上创造了非洲球队的最佳战绩，获得第四名。'
+  },
+  {
+    id: 47, tag: '趣味知识',
+    q: '世界杯历史上单届进球最多的球员是谁？',
+    options: ['方丹（13球）', '柯奇士（11球）', '罗纳尔多（8球）', '盖德·穆勒（10球）'],
+    answer: 0,
+    explanation: '法国球员朱斯特·方丹在1958年世界杯上打入13球，保持着单届世界杯进球纪录。'
+  },
+  {
+    id: 48, tag: '趣味知识',
+    q: '2026世界杯的官方口号或标语是什么？',
+    options: ['"One Love"', '待官方公布', '"It\'s Our Game"', '"For the Game"'],
+    answer: 1,
+    explanation: '截至2025年，2026世界杯的官方标语尚未正式公布。'
+  },
+  {
+    id: 49, tag: '趣味知识',
+    q: '2026世界杯的门票预计将发售多少张？',
+    options: ['约200万张', '约350万张', '约500万张', '约700万张'],
+    answer: 1,
+    explanation: '由于104场比赛的庞大规模，预计约有350万张门票可供发售。'
+  },
+  {
+    id: 50, tag: '趣味知识',
+    q: '世界杯历史上最远的远射进球是谁打入的？',
+    options: ['贝克汉姆', '贝利', '穆罕默德（沙特的亚西尔·卡塔尼）', '没有官方记录'],
+    answer: 2,
+    explanation: '这个纪录有多种说法，但贝利在中场线附近的吊射和沙特球员的远射都很有名，尚无官方认定。'
+  },
+  {
+    id: 51, tag: '趣味知识',
+    q: '2026世界杯的电视转播预计将覆盖多少观众？',
+    options: ['约10亿', '约25亿', '约50亿', '约100亿'],
+    answer: 2,
+    explanation: '世界杯是全球最受关注的体育赛事之一，2022年世界杯吸引了约50亿观众，2026年预计将覆盖更广。'
+  },
+  {
+    id: 52, tag: '趣味知识',
+    q: '世界杯历史上最快的进球用时多少？',
+    options: ['11秒', '15秒', '20秒', '25秒'],
+    answer: 0,
+    explanation: '2002年世界杯三四名决赛中，土耳其的哈坎·苏克在开场11秒打入世界杯历史最快进球。'
+  }
+];
+
+// ============================================================
+// Game State
+// ============================================================
+const STATE = {
+  questions: [],
+  currentIndex: 0,
+  score: 0,
+  totalBase: 0,
+  totalBonus: 0,
+  totalCorrect: 0,
+  isAnswered: false,
+  timerId: null,
+  timeLeft: 20,
+  timerRunning: false,
+  onResultScreen: false
+};
+
+// DOM refs
+const $ = id => document.getElementById(id);
+const coverPage = $('cover-page');
+const introOverlay = $('intro-overlay');
+const quizPage = $('quiz-page');
+const resultPage = $('result-page');
+const qProgressText = $('qProgressText');
+const qProgressFill = $('qProgressFill');
+const qScoreDisplay = $('qScoreDisplay');
+const timerCircle = $('timerCircle');
+const timerText = $('timerText');
+const qNumber = $('qNumber');
+const qTag = $('qTag');
+const qText = $('qText');
+const answersContainer = $('answersContainer');
+const explanationBox = $('explanationBox');
+const explanationText = $('explanationText');
+const rankCanvas = $('rankCanvas');
+const lbList = $('lbList');
+const CIRCUMFERENCE = 2 * Math.PI * 28; // ~176
+
+// ============================================================
+// Utility Functions
+// ============================================================
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function showPage(page) {
+  [coverPage, quizPage, resultPage].forEach(p => p.classList.remove('active'));
+  if (page) page.classList.add('active');
+}
+
+function formatDate() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+// ============================================================
+// Intro Animation
+// ============================================================
+function playIntro(callback) {
+  introOverlay.classList.add('active');
+  const elems = [
+    $('intro-ball'), $('intro-flag1'), $('intro-flag2'), $('intro-flag3'),
+    $('intro-star1'), $('intro-star2')
+  ];
+  elems.forEach((el, i) => {
+    setTimeout(() => el.classList.add('animate'), 100 + i * 150);
+  });
+  setTimeout(() => $('intro-text').classList.add('animate'), 800);
+  setTimeout(() => {
+    introOverlay.classList.remove('active');
+    elems.forEach(el => el.classList.remove('animate'));
+    $('intro-text').classList.remove('animate');
+    if (callback) callback();
+  }, 2500);
+}
+
+// ============================================================
+// Scoring
+// ============================================================
+function calcScore() {
+  const earned = STATE.totalBase + STATE.totalBonus;
+  // Formula: 100-point scale, normalized with /150
+  const raw = Math.round((earned / 150) * 100);
+  return Math.min(100, raw);
+}
+
+function getRank(score) {
+  if (score >= 90) return { name: '传奇球王', emoji: '👑', color: '#FF8C00', desc: '你是世界杯知识之王！无论是历史典故还是最新动态，你都了如指掌！', img: 'assets/rank_legend.jpg' };
+  if (score >= 75) return { name: '全明星', emoji: '⭐', color: '#00B4D8', desc: '优秀的足球知识储备！你对世界杯的了解足以和专业球迷一较高下！', img: 'assets/rank_star.jpg' };
+  if (score >= 60) return { name: '资深球迷', emoji: '⚽', color: '#6C5CE7', desc: '不错的成绩！你对世界杯有着相当的了解，继续加油！', img: 'assets/rank_fan.jpg' };
+  if (score >= 40) return { name: '业余爱好者', emoji: '📣', color: '#0984E3', desc: '对世界杯有一定了解，但还需要多多关注足球新闻哦！', img: 'assets/rank_amateur.jpg' };
+  return { name: '足球萌新', emoji: '🌱', color: '#FD79A8', desc: '欢迎来到足球世界！多看看比赛，下次一定能拿高分！', img: 'assets/rank_newbie.jpg' };
+}
+
+// ============================================================
+// Timer
+// ============================================================
+function startTimer() {
+  STATE.timeLeft = 20;
+  STATE.timerRunning = true;
+  updateTimerDisplay();
+  clearInterval(STATE.timerId);
+  STATE.timerId = setInterval(() => {
+    STATE.timeLeft--;
+    updateTimerDisplay();
+    if (STATE.timeLeft <= 0) {
+      clearInterval(STATE.timerId);
+      STATE.timerRunning = false;
+      handleTimeout();
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(STATE.timerId);
+  STATE.timerRunning = false;
+}
+
+function updateTimerDisplay() {
+  const pct = STATE.timeLeft / 20;
+  const offset = CIRCUMFERENCE * (1 - pct);
+  timerCircle.setAttribute('stroke-dashoffset', offset);
+  timerText.textContent = STATE.timeLeft;
+  if (STATE.timeLeft < 5) {
+    timerCircle.classList.add('warning');
+    timerText.classList.add('warning');
+  } else {
+    timerCircle.classList.remove('warning');
+    timerText.classList.remove('warning');
+  }
+}
+
+function handleTimeout() {
+  if (STATE.isAnswered) return;
+  STATE.isAnswered = true;
+  // Highlight correct answer
+  const btns = answersContainer.querySelectorAll('.answer-btn');
+  const q = STATE.questions[STATE.currentIndex];
+  btns.forEach((btn, i) => {
+    btn.classList.add('disabled');
+    if (i === q.answer) btn.classList.add('correct');
+  });
+  showExplanation(q, false);
+  setTimeout(nextQuestion, 1500);
+}
+
+// ============================================================
+// Quiz Logic
+// ============================================================
+function startGame() {
+  // Reset state
+  STATE.score = 0;
+  STATE.currentIndex = 0;
+  STATE.totalBase = 0;
+  STATE.totalBonus = 0;
+  STATE.totalCorrect = 0;
+  STATE.isAnswered = false;
+  STATE.onResultScreen = false;
+  stopTimer();
+
+  // Select 20 random questions
+  const shuffled = shuffle([...ALL_QUESTIONS]);
+  STATE.questions = shuffled.slice(0, 20);
+
+  showPage(null);
+
+  playIntro(() => {
+    showPage(quizPage);
+    renderQuestion();
+  });
+}
+
+function renderQuestion() {
+  const q = STATE.questions[STATE.currentIndex];
+  STATE.isAnswered = false;
+
+  // Update progress
+  const total = STATE.questions.length;
+  const done = STATE.currentIndex;
+  qProgressText.textContent = `${done + 1}/${total}`;
+  qProgressFill.style.width = `${((done + 1) / total) * 100}%`;
+  qScoreDisplay.textContent = `${calcScore()}分`;
+
+  // Question
+  qNumber.textContent = `第 ${done + 1} 题`;
+  qTag.textContent = q.tag;
+  qText.textContent = q.q;
+
+  // Answers
+  const letters = ['A', 'B', 'C', 'D'];
+  answersContainer.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.innerHTML = `<span class="answer-letter">${letters[i]}</span><span class="answer-text">${opt}</span>`;
+    btn.addEventListener('click', () => handleAnswer(i));
+    answersContainer.appendChild(btn);
+  });
+
+  // Hide explanation
+  explanationBox.classList.add('hidden');
+
+  // Reset timer
+  stopTimer();
+  startTimer();
+}
+
+function handleAnswer(selected) {
+  if (STATE.isAnswered) return;
+  STATE.isAnswered = true;
+  stopTimer();
+
+  const q = STATE.questions[STATE.currentIndex];
+  const btns = answersContainer.querySelectorAll('.answer-btn');
+  const correct = selected === q.answer;
+
+  // Highlight
+  btns.forEach((btn, i) => {
+    btn.classList.add('disabled');
+    if (i === q.answer) btn.classList.add('correct');
+    if (i === selected && !correct) btn.classList.add('wrong');
+  });
+
+  // Score
+  if (correct) {
+    const base = 5;
+    const bonus = Math.round((STATE.timeLeft / 20) * 5);
+    STATE.totalBase += base;
+    STATE.totalBonus += bonus;
+    STATE.totalCorrect++;
+  }
+
+  STATE.score = calcScore();
+
+  // Show explanation after a brief pause
+  setTimeout(() => {
+    showExplanation(q, correct);
+  }, 400);
+
+  setTimeout(nextQuestion, 1500);
+}
+
+function showExplanation(q, correct) {
+  const icon = correct ? '✅' : '❌';
+  explanationBox.classList.remove('hidden');
+  explanationText.textContent = `${icon} ${q.explanation}`;
+}
+
+function nextQuestion() {
+  STATE.currentIndex++;
+  if (STATE.currentIndex >= STATE.questions.length) {
+    // Game over
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+// ============================================================
+// Result & Rank Card (Canvas)
+// ============================================================
+function showResult() {
+  stopTimer();
+  STATE.onResultScreen = true;
+  showPage(resultPage);
+  drawRankCard();
+  updateLeaderboard(STATE.score);
+  renderLeaderboard();
+}
+
+function drawRankCard() {
+  const canvas = rankCanvas;
+  const ctx = canvas.getContext('2d');
+  const W = 440, H = 620;
+  canvas.width = W;
+  canvas.height = H;
+
+  const score = STATE.score;
+  const rank = getRank(score);
+
+  // Helper: load image
+  function loadImg(src) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = () => resolve(null);
+      img.src = src;
+    });
+  }
+
+  // Draw card content
+  async function draw() {
+    // Background gradient
+    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, '#FFF8F0');
+    grad.addColorStop(0.3, '#FFEAA7');
+    grad.addColorStop(0.6, '#FFD6A5');
+    grad.addColorStop(1, '#FFB347');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Doodle border
+    ctx.strokeStyle = '#2D3436';
+    ctx.lineWidth = 4;
+    ctx.setLineDash([8, 6]);
+    ctx.strokeRect(12, 12, W - 24, H - 24);
+    ctx.setLineDash([]);
+
+    // Doodle corners
+    const cs = 20;
+    ctx.fillStyle = '#2D3436';
+    [[14,14],[W-14-cs,14],[14,H-14-cs],[W-14-cs,H-14-cs]].forEach(([x,y]) => {
+      ctx.fillRect(x, y, cs, cs);
+    });
+
+    // Stars decoration
+    const starPositions = [
+      [30, 50], [W-50, 40], [50, 100], [W-60, 90],
+      [35, H-50], [W-40, H-60], [70, H-90], [W-70, 130]
+    ];
+    ctx.font = '18px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    starPositions.forEach(([x, y]) => {
+      ctx.fillStyle = `hsla(${40 + Math.random() * 20}, 80%, 60%, 0.15)`;
+      ctx.font = `${14 + Math.random() * 8}px sans-serif`;
+      ctx.fillText('✦', x, y);
+    });
+
+    // Title
+    ctx.fillStyle = '#2D3436';
+    ctx.font = '28px "Patrick Hand", "Comic Neue", "Noto Sans SC", cursive';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText('🏆 挑战成绩单', W / 2, 30);
+
+    // Emoji badge
+    ctx.font = '60px sans-serif';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(rank.emoji, W / 2, 110);
+
+    // Rank name
+    ctx.fillStyle = rank.color;
+    ctx.font = 'bold 36px "Patrick Hand", "Comic Neue", "Noto Sans SC", cursive';
+    ctx.textBaseline = 'top';
+    ctx.fillText(rank.name, W / 2, 140);
+
+    // Score circle
+    const cx = W / 2, cy = 225;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 48, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+    ctx.strokeStyle = rank.color;
+    ctx.lineWidth = 5;
+    ctx.stroke();
+
+    // Score text
+    ctx.fillStyle = '#2D3436';
+    ctx.font = 'bold 36px "Patrick Hand", "Comic Neue", sans-serif';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`${score}`, cx, cy - 2);
+    ctx.fillStyle = '#888';
+    ctx.font = '12px "Noto Sans SC", sans-serif';
+    ctx.fillText('分', cx + 30, cy + 8);
+
+    // Progress bar background
+    const barX = 50, barY = 290, barW = W - 100, barH = 22;
+    ctx.fillStyle = '#eee';
+    ctx.beginPath();
+    ctx.roundRect(barX, barY, barW, barH, 11);
+    ctx.fill();
+    ctx.strokeStyle = '#2D3436';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(barX, barY, barW, barH, 11);
+    ctx.stroke();
+
+    // Progress bar fill
+    const fillW = Math.max(4, (score / 100) * barW);
+    const barGrad = ctx.createLinearGradient(barX, 0, barX + barW, 0);
+    barGrad.addColorStop(0, rank.color);
+    barGrad.addColorStop(1, rank.color + '88');
+    ctx.fillStyle = barGrad;
+    ctx.beginPath();
+    ctx.roundRect(barX + 2, barY + 2, fillW - 4, barH - 4, 9);
+    ctx.fill();
+
+    // Progress label
+    ctx.fillStyle = '#666';
+    ctx.font = '11px "Noto Sans SC", sans-serif';
+    ctx.textBaseline = 'top';
+    ctx.fillText(`0`, barX, barY + barH + 6);
+    ctx.textAlign = 'right';
+    ctx.fillText(`100`, barX + barW, barY + barH + 6);
+    ctx.textAlign = 'center';
+
+    // Stats
+    ctx.fillStyle = '#555';
+    ctx.font = '14px "Noto Sans SC", sans-serif';
+    ctx.textBaseline = 'top';
+    const statsY = 340;
+    const correct = STATE.totalCorrect;
+    const total = STATE.questions.length;
+    ctx.fillText(`✅ 正确 ${correct}/${total} 题    ⏱️ 时间奖励 +${STATE.totalBonus}分`, W / 2, statsY);
+
+    // Description
+    ctx.fillStyle = '#666';
+    ctx.font = '13px "Noto Sans SC", sans-serif';
+    ctx.textBaseline = 'top';
+    const descLines = wrapText(ctx, rank.desc, W - 80);
+    const descY = 380;
+    descLines.forEach((line, i) => {
+      ctx.fillText(line, W / 2, descY + i * 22);
+    });
+
+    // Character image
+    const imgY = 450;
+    const imgSize = 120;
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(W / 2, imgY + imgSize / 2, imgSize / 2 + 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = rank.color;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(W / 2, imgY + imgSize / 2, imgSize / 2 + 4, 0, Math.PI * 2);
+    ctx.stroke();
+
+    const img = await loadImg(rank.img);
+    if (img) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(W / 2, imgY + imgSize / 2, imgSize / 2, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.drawImage(img, W / 2 - imgSize / 2, imgY, imgSize, imgSize);
+      ctx.restore();
+    } else {
+      ctx.font = '50px sans-serif';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(rank.emoji, W / 2, imgY + imgSize / 2);
+    }
+
+    // Footer
+    ctx.fillStyle = '#aaa';
+    ctx.font = '11px "Noto Sans SC", sans-serif';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(`⚽ 2026美加墨世界杯知识挑战 · ${formatDate()}`, W / 2, H - 16);
+  }
+
+  draw();
+}
+
+// Text wrapping helper
+function wrapText(ctx, text, maxWidth) {
+  const lines = [];
+  let current = '';
+  for (const ch of text) {
+    const test = current + ch;
+    if (ctx.measureText(test).width > maxWidth && current) {
+      lines.push(current);
+      current = ch;
+    } else {
+      current = test;
+    }
+  }
+  if (current) lines.push(current);
+  return lines.length ? lines : [text];
+}
+
+// roundRect polyfill for canvas
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+    if (r > w / 2) r = w / 2;
+    if (r > h / 2) r = h / 2;
+    this.moveTo(x + r, y);
+    this.arcTo(x + w, y, x + w, y + h, r);
+    this.arcTo(x + w, y + h, x, y + h, r);
+    this.arcTo(x, y + h, x, y, r);
+    this.arcTo(x, y, x + w, y, r);
+    return this;
+  };
+}
+
+// ============================================================
+// Save Rank Card
+// ============================================================
+function saveRankCard() {
+  const canvas = rankCanvas;
+  const link = document.createElement('a');
+  link.download = `世界杯挑战_${STATE.score}分_${getRank(STATE.score).name}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+// ============================================================
+// Leaderboard (LocalStorage)
+// ============================================================
+function getLeaderboard() {
+  try {
+    return JSON.parse(localStorage.getItem('wc2026_quiz_lb') || '[]');
+  } catch { return []; }
+}
+
+function saveLeaderboard(data) {
+  localStorage.setItem('wc2026_quiz_lb', JSON.stringify(data));
+}
+
+function updateLeaderboard(score) {
+  const lb = getLeaderboard();
+  const rank = getRank(score);
+  lb.push({
+    score,
+    rank: rank.name,
+    emoji: rank.emoji,
+    correct: STATE.totalCorrect,
+    total: STATE.questions.length,
+    date: formatDate()
+  });
+  lb.sort((a, b) => b.score - a.score);
+  if (lb.length > 10) lb.length = 10;
+  saveLeaderboard(lb);
+}
+
+function renderLeaderboard() {
+  const lb = getLeaderboard();
+  if (!lb.length) {
+    lbList.innerHTML = '<div class="lb-empty">还没有记录，快来挑战吧！</div>';
+    return;
+  }
+  const medals = ['🥇', '🥈', '🥉'];
+  lbList.innerHTML = lb.map((entry, i) => {
+    const rankClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+    const medal = i < 3 ? medals[i] : `#${i + 1}`;
+    return `<div class="lb-item">
+      <span class="lb-rank ${rankClass}">${medal}</span>
+      <span>${entry.emoji} ${entry.rank}</span>
+      <span class="lb-score">${entry.score}分</span>
+      <span class="lb-date">${entry.date}</span>
+    </div>`;
+  }).join('');
+}
+
+function clearLeaderboard() {
+  if (confirm('确定要清除所有排行榜记录吗？')) {
+    localStorage.removeItem('wc2026_quiz_lb');
+    renderLeaderboard();
+  }
+}
+
+// ============================================================
+// Init
+// ============================================================
+renderLeaderboard();
+
+// Handle image error for cover
+document.querySelectorAll('.cover-hero-wrap img').forEach(img => {
+  img.addEventListener('error', function() {
+    this.style.display = 'none';
+  });
+});
+
+console.log('⚽ 2026美加墨世界杯知识挑战已加载！');
+console.log(`📚 题库共 ${ALL_QUESTIONS.length} 题，每局随机抽 20 题`);
+</script>
+</body>
+</html>
