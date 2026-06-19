@@ -667,6 +667,38 @@ body {
   transition: var(--transition);
 }
 .btn-clear-lb:hover { border-color: var(--color-wrong); color: var(--color-wrong); }
+/* ===== Answer Feedback Toast ===== */
+.answer-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  font-family: var(--font-hand);
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  font-weight: 700;
+  z-index: 999;
+  pointer-events: none;
+  text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+  opacity: 0;
+  transition: none;
+}
+.answer-toast.show {
+  animation: toastPop 0.8s ease-out forwards;
+}
+.answer-toast.correct-toast {
+  color: var(--color-correct);
+}
+.answer-toast.wrong-toast {
+  color: var(--color-wrong);
+}
+@keyframes toastPop {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(-10deg); }
+  30% { opacity: 1; transform: translate(-50%, -50%) scale(1.2) rotate(5deg); }
+  50% { transform: translate(-50%, -50%) scale(0.95) rotate(-2deg); }
+  70% { transform: translate(-50%, -50%) scale(1.05) rotate(1deg); }
+  85% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0); }
+  100% { opacity: 0; transform: translate(-50%, -60%) scale(0.8) rotate(0); }
+}
 /* ===== Responsive ===== */
 /* Mobile S (320px+) */
 @media (min-width: 320px) {
@@ -718,6 +750,7 @@ body {
 </style>
 </head>
 <body>
+<div class="answer-toast" id="answerToast"></div>
 
 <!-- ==================== COVER PAGE ==================== -->
 <div id="cover-page" class="page active">
@@ -749,7 +782,6 @@ body {
 
     <div class="cover-hero-wrap">
       <img src="assets/hero_comic.jpg" alt="2026世界杯" loading="lazy" onerror="this.style.display='none'">
-      <div class="cover-badge">AI创意大赛</div>
     </div>
 
     <!-- Flag Ribbon -->
@@ -1466,12 +1498,25 @@ function handleAnswer(selected) {
 
   STATE.score = calcScore();
 
+  // Show feedback toast
+  showAnswerToast(correct);
+
   // Show explanation after a brief pause
   setTimeout(() => {
     showExplanation(q, correct);
   }, 400);
 
   setTimeout(nextQuestion, 1500);
+}
+
+function showAnswerToast(correct) {
+  const toast = document.getElementById('answerToast');
+  const correctPhrases = ['太棒了！🎉', '厉害！👏', '完美！✨', '学霸！🧠', '牛！💪', '满分！🌟'];
+  const wrongPhrases = ['可惜！😅', '加油！💪', '差一点！🤏', '没关系！😊', '下次一定！🍀', '继续冲！🔥'];
+  const phrases = correct ? correctPhrases : wrongPhrases;
+  toast.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+  toast.className = 'answer-toast ' + (correct ? 'correct-toast' : 'wrong-toast') + ' show';
+  setTimeout(() => { toast.className = 'answer-toast'; }, 800);
 }
 
 function showExplanation(q, correct) {
@@ -1525,12 +1570,13 @@ function drawRankCard() {
 
   // Draw card content
   async function draw() {
-    // Background gradient
-    const grad = ctx.createLinearGradient(0, 0, 0, H);
-    grad.addColorStop(0, '#FFF8F0');
-    grad.addColorStop(0.3, '#FFEAA7');
-    grad.addColorStop(0.6, '#FFD6A5');
-    grad.addColorStop(1, '#FFB347');
+    // Background gradient - dopamine colors
+    const grad = ctx.createLinearGradient(0, 0, W, H);
+    grad.addColorStop(0, '#FDF2F8');
+    grad.addColorStop(0.25, '#FDE68A');
+    grad.addColorStop(0.5, '#C4B5FD');
+    grad.addColorStop(0.75, '#A7F3D0');
+    grad.addColorStop(1, '#FBCFE8');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, W, H);
 
@@ -1557,7 +1603,7 @@ function drawRankCard() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     starPositions.forEach(([x, y]) => {
-      ctx.fillStyle = `hsla(${40 + Math.random() * 20}, 80%, 60%, 0.15)`;
+      ctx.fillStyle = `hsla(${Math.random() * 360}, 80%, 65%, 0.2)`;
       ctx.font = `${14 + Math.random() * 8}px sans-serif`;
       ctx.fillText('✦', x, y);
     });
@@ -1795,7 +1841,10 @@ function showLeaderboardFromCover() {
   const resultActions = document.querySelector('.result-actions');
   if (rankCardWrap) rankCardWrap.style.display = 'none';
   if (resultTitle) resultTitle.textContent = '🏆 排行榜';
-  if (resultActions) resultActions.style.display = 'none';
+  if (resultActions) {
+    resultActions.style.display = 'flex';
+    resultActions.innerHTML = '<button class="btn-action primary" onclick="startGame()">⚡ 开始挑战</button>';
+  }
 }
 
 // ============================================================
